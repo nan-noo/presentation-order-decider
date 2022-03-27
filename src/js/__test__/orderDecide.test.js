@@ -1,3 +1,4 @@
+import { NOT_ASSIGNED_TEXT } from '../constant/rule';
 import OrderDecider from '../orderDecider';
 
 describe('순서 결정 테스트', () => {
@@ -10,7 +11,8 @@ describe('순서 결정 테스트', () => {
       2: [2, 3, 4],
       3: [3, 4, 5],
     };
-    expect(orderDecider.decideOrder(priorityCollection, 3)).toEqual({ 1: 1, 2: 2, 3: 3 });
+    orderDecider.decideOrder(priorityCollection, 3);
+    expect(orderDecider.orderResult).toEqual({ 1: 1, 2: 2, 3: 3 });
   });
 
   test('입력한 순서 번호가 겹치면 랜덤 할당한다.', () => {
@@ -19,9 +21,8 @@ describe('순서 결정 테스트', () => {
       2: [2, 2, 4],
       3: [3, 3, 5],
     };
-    expect(orderDecider.decideOrder(priorityCollection, 3)).toEqual(
-      expect.objectContaining({ 3: 3 })
-    );
+    orderDecider.decideOrder(priorityCollection, 3);
+    expect(orderDecider.orderResult).toEqual(expect.objectContaining({ 3: 3 }));
   });
 
   test('순서가 할당되지 않은 팀은 `Not assigned`가 할당된다.', () => {
@@ -30,8 +31,7 @@ describe('순서 결정 테스트', () => {
       2: [2, 2, 2, 2],
       3: [3, 3, 3, 3],
     };
-    expect(
-      Object.values(orderDecider.decideOrder(priorityCollection, 4)).includes('Not assigned')
-    ).toEqual(true);
+    orderDecider.decideOrder(priorityCollection, 4);
+    expect(Object.values(orderDecider.orderResult).includes(NOT_ASSIGNED_TEXT)).toEqual(true);
   });
 });

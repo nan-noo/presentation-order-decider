@@ -1,29 +1,28 @@
+import { NOT_ASSIGNED_TEXT } from './constant/rule';
 import { pickRandomElementInArray } from './util';
 
 class OrderDecider {
+  constructor() {
+    this.orderResult = {};
+  }
+
   decideOrder(priorityCollection, teamCount) {
-    let orderResult = this.#initOrderResult(teamCount); // 팀: 순서
+    this.orderResult = this.#initOrderResult(teamCount);
     let remainedTeam = Array.from({ length: teamCount }, (_, index) => index + 1);
 
     Object.values(priorityCollection).every((orderListByPriority) => {
       if (!remainedTeam.length) return false;
 
-      const candidateTeamByOrder = this.#sortTeamByOrder(
-        orderListByPriority,
-        remainedTeam,
-        orderResult
-      );
-      orderResult = this.#assignOrderToEachTeam(candidateTeamByOrder, remainedTeam, orderResult);
+      const candidateTeamByOrder = this.#sortTeamByOrder(orderListByPriority, remainedTeam);
+      this.#assignOrderToEachTeam(candidateTeamByOrder, remainedTeam);
     });
-
-    return orderResult;
   }
 
-  #sortTeamByOrder(orderListByPriority, remainedTeam, orderResult) {
+  #sortTeamByOrder(orderListByPriority, remainedTeam) {
     const candidateTeamByOrder = {};
     orderListByPriority.every((order, index) => {
       const teamNumber = index + 1;
-      if (remainedTeam.includes(teamNumber) && !Object.values(orderResult).includes(order)) {
+      if (remainedTeam.includes(teamNumber) && !Object.values(this.orderResult).includes(order)) {
         if (!candidateTeamByOrder[order]) {
           candidateTeamByOrder[order] = [teamNumber];
           return true;
@@ -35,25 +34,24 @@ class OrderDecider {
     return candidateTeamByOrder;
   }
 
-  #assignOrderToEachTeam(candidateTeamByOrder, remainedTeam, orderResult) {
+  #assignOrderToEachTeam(candidateTeamByOrder, remainedTeam) {
     Object.entries(candidateTeamByOrder).every(([order, candidateTeams]) => {
       const orderNumber = Number(order);
       if (candidateTeams.length === 1) {
-        orderResult[candidateTeams[0]] = orderNumber;
+        this.orderResult[candidateTeams[0]] = orderNumber;
         remainedTeam = remainedTeam.filter((team) => team !== candidateTeams[0]);
         return true;
       }
       const winnerTeam = pickRandomElementInArray(candidateTeams);
-      orderResult[winnerTeam] = orderNumber;
+      this.orderResult[winnerTeam] = orderNumber;
       remainedTeam = remainedTeam.filter((team) => team !== winnerTeam);
       return true;
     });
-    return orderResult;
   }
 
   #initOrderResult(teamCount) {
     const result = {};
-    Array.from({ length: teamCount }, (_, team) => (result[team + 1] = 'Not assigned'));
+    Array.from({ length: teamCount }, (_, team) => (result[team + 1] = NOT_ASSIGNED_TEXT));
     return result;
   }
 }
