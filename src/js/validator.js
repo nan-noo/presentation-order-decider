@@ -31,16 +31,16 @@ export const validatePrevInfo = ({ totalTeamCount, totalPriorities, totalOrder }
   }
 };
 
-export const validateOrderList = (orderList, totalOrder) => {
-  if (orderList.some((order) => !order)) {
+export const validateOrderList = (orderListByTeam, totalOrder) => {
+  if (orderListByTeam.some((order) => !order)) {
     throw new Error(ORDER_LIST_ERROR_MESSAGE.NO_EMPTY_INPUT_ALLOWED);
   }
 
-  if (new Set(orderList).size !== orderList.length) {
+  if (new Set(orderListByTeam).size !== orderListByTeam.length) {
     throw new Error(ORDER_LIST_ERROR_MESSAGE.NO_DUPLICATION_ALLOWED);
   }
 
-  if (orderList.some((order) => order > totalOrder)) {
+  if (orderListByTeam.some((order) => order > totalOrder)) {
     throw new Error(ORDER_LIST_ERROR_MESSAGE.OUT_OF_RANGE(totalOrder));
   }
 };
