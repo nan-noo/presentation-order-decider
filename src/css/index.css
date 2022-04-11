@@ -58,11 +58,11 @@ h2 {
 }
 
 h1 {
-  margin-bottom: 32px;
+  margin-bottom: 2rem;
 }
 
 button {
-  padding: 8px;
+  padding: 0.5em;
 
   font-size: 0.875rem;
   border: none;
@@ -71,7 +71,7 @@ button {
 }
 
 a {
-  padding: 8px;
+  padding: 0.5em;
 
   font-size: 0.875rem;
   text-decoration: none;
@@ -89,10 +89,12 @@ nav {
 section {
   margin: 1em 0;
   padding: 0 1em;
+
+  min-width: 28em;
 }
 
 input {
-  padding: 8px;
+  padding: 0.5em;
   border: 1px solid var(--input-border-color);
   border-radius: 4px;
 }
@@ -110,10 +112,10 @@ input[type='number']:disabled::-webkit-inner-spin-button {
 }
 
 form > label {
-  margin: 0 0 8px;
+  margin: 0 0 0.5em;
   font-weight: 400;
   font-size: 1rem;
-  line-height: 24px;
+  line-height: 1.5rem;
   letter-spacing: 0.5px;
 }
 
@@ -121,7 +123,7 @@ table {
   border-width: 1px;
   border-bottom: 1px solid var(--table-border-color);
   border-collapse: collapse;
-  min-width: 417px;
+  min-width: 26em;
 }
 
 caption {
@@ -131,7 +133,7 @@ caption {
 tr,
 td {
   width: 25%;
-  padding: 8px;
+  padding: 0.5em;
   border-top: 1px solid var(--table-border-color);
   text-align: center;
 }
@@ -141,6 +143,6 @@ td > div {
 }
 
 th {
-  padding: 8px;
+  padding: 0.5em;
   width: 25%;
 }
