@@ -19,7 +19,9 @@
 
   --snackbar-bg-color: #333;
 
-  --default-link-active-color: #3581d7;
+  --correct-error-text-color: #3581d7;
+
+  --default-error-text-color: #d73535;
 }
 
 @import './app.css';

@@ -14,10 +14,28 @@
   display: flex;
   flex-direction: column;
   align-self: flex-start;
+
+  width: 100%;
+}
+
+.pre-info-input-container {
+  width: 100%;
 }
 
 .pre-info-input {
+  width: 30%;
   margin: 0.2em 0;
+}
+
+.error-message-text {
+  padding: 0.2em 0;
+
+  color: var(--default-error-text-color);
+  font-size: 0.875rem;
+}
+
+.error-message-text.correct {
+  color: var(--correct-error-text-color);
 }
 
 .team-order-list-section {
