@@ -1,7 +1,7 @@
 const generateTableHeadByPriorities = (totalPriorities) =>
   Array.from({ length: totalPriorities }, (_, index) => `<th>${index + 1}순위</th>`).join(' ');
 
-const generateTableRowByTeamCount = (totalTeamCount, totalPriorities) =>
+const generateTableRowByTeamCount = (totalTeamCount, totalPriorities, totalOrder) =>
   Array.from(
     { length: totalTeamCount },
     (_, index) => `
@@ -9,13 +9,13 @@ const generateTableRowByTeamCount = (totalTeamCount, totalPriorities) =>
   <th scope="row">팀 ${index + 1}</th>
   ${Array.from(
     { length: totalPriorities },
-    () => `<td><input type="number" min="${totalTeamCount}" max="100" placeholder="순서" /></td>`
+    () => `<td><input type="number" min="1" max="${totalOrder}" placeholder="순서" /></td>`
   ).join(' ')}
 </tr>
 `
   ).join(' ');
 
-export const generateTeamOrderListTemplate = ({ totalTeamCount, totalPriorities }) => `
+export const generateTeamOrderListTemplate = ({ totalTeamCount, totalPriorities, totalOrder }) => `
   <form class="team-order-list-form">
     <label>원하는 순서부터 차례대로 입력해주세요.</label>
     <table>
@@ -23,7 +23,7 @@ export const generateTeamOrderListTemplate = ({ totalTeamCount, totalPriorities 
         <th></th>
         ${generateTableHeadByPriorities(totalPriorities)}
       </tr>
-      ${generateTableRowByTeamCount(totalTeamCount, totalPriorities)}
+      ${generateTableRowByTeamCount(totalTeamCount, totalPriorities, totalOrder)}
     </table>
     <button class="input-form-button result-button">결과 확인하기</button>
   </form>
