@@ -5,7 +5,7 @@ const generateTableRowByTeamCount = (totalTeamCount, totalPriorities, totalOrder
   Array.from(
     { length: totalTeamCount },
     (_, index) => `
-<tr>
+<tr class="team-row">
   <th scope="row">팀 ${index + 1}</th>
   ${Array.from(
     { length: totalPriorities },
