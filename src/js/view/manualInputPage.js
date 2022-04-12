@@ -30,6 +30,7 @@ class ManualInputPage {
       this.errorMessageText.classList.add('correct');
       this.errorMessageText.textContent = '올바른 입력값입니다.';
 
+      this.preInfoInputList.forEach((preInfoInput) => (preInfoInput.disabled = true));
       this.#renderTeamOrderListSection(prevInfoObject);
     }, 500);
   };
