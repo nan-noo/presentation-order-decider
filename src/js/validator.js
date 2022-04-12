@@ -7,11 +7,11 @@ const isBlankInput = (totalTeamCount, totalPriorities, totalOrder) =>
 const isOutOfTeamRange = (totalTeamCount) =>
   totalTeamCount < PREV_INFO_RULE.MIN_TEAM_COUNT || totalTeamCount > PREV_INFO_RULE.MAX_TEAM_COUNT;
 
-const isOutOfPriorityRange = (totalPriorities) =>
-  totalPriorities < PREV_INFO_RULE.MIN_PRIORITY || totalPriorities > PREV_INFO_RULE.MAX_PRIORITY;
-
 const isOutOfOrderRange = (totalOrder, totalTeamCount) =>
   totalOrder < totalTeamCount || totalOrder > PREV_INFO_RULE.MAX_ORDER;
+
+const isOutOfPriorityRange = (totalPriorities, totalOrder) =>
+  totalPriorities < PREV_INFO_RULE.MIN_PRIORITY || totalPriorities > totalOrder;
 
 export const validatePrevInfo = ({ totalTeamCount, totalPriorities, totalOrder }) => {
   if (isBlankInput(totalTeamCount, totalPriorities, totalOrder)) {
@@ -22,12 +22,12 @@ export const validatePrevInfo = ({ totalTeamCount, totalPriorities, totalOrder }
     throw new Error(PREV_INFO_ERROR_MESSAGE.OUT_OF_TEAM_COUNT_RANGE);
   }
 
-  if (isOutOfPriorityRange(totalPriorities)) {
-    throw new Error(PREV_INFO_ERROR_MESSAGE.OUT_OF_PRIORITY_RANGE);
-  }
-
   if (isOutOfOrderRange(totalOrder, totalTeamCount)) {
     throw new Error(PREV_INFO_ERROR_MESSAGE.OUT_OF_ORDER_RANGE(totalTeamCount));
+  }
+
+  if (isOutOfPriorityRange(totalPriorities, totalOrder)) {
+    throw new Error(PREV_INFO_ERROR_MESSAGE.OUT_OF_PRIORITY_RANGE(totalOrder));
   }
 };
 

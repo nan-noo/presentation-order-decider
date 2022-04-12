@@ -73,10 +73,10 @@ class ManualInputPage {
   }
 
   #converToPrevInfoObject(preInfoInputList) {
-    const [totalTeamCount, totalPriorities, totalOrder] = Array.from(preInfoInputList).map(
-      (preInfoInput) => preInfoInput.value
+    const [totalTeamCount, totalOrder, totalPriorities] = Array.from(preInfoInputList).map(
+      (preInfoInput) => preInfoInput.valueAsNumber
     );
-    return { totalTeamCount, totalPriorities, totalOrder };
+    return { totalTeamCount, totalOrder, totalPriorities };
   }
 }
 

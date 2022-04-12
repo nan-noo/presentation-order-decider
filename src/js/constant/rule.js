@@ -1,7 +1,6 @@
 export const PREV_INFO_RULE = {
   MAX_TEAM_COUNT: 50,
   MIN_TEAM_COUNT: 2,
-  MAX_PRIORITY: 10,
   MIN_PRIORITY: 1,
   MAX_ORDER: 100,
 };
