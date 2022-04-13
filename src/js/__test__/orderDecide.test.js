@@ -5,33 +5,44 @@ describe('순서 결정 테스트', () => {
   const orderDecider = new OrderDecider();
 
   test('입력한 순서 번호가 유일하면 그 값을 할당한다.', () => {
-    const priorityCollection = {
-      // 우선순위: [1팀, 2팀, 3팀]
+    const orderListByTeamCollection = {
+      // 팀: [1순위, 2순위, 3순위]
       1: [1, 2, 3],
       2: [2, 3, 4],
       3: [3, 4, 5],
     };
-    orderDecider.decideOrder(priorityCollection, 3);
-    expect(orderDecider.orderResult).toEqual({ 1: 1, 2: 2, 3: 3 });
+
+    expect(orderDecider.getPresentationOrderResult(3, orderListByTeamCollection)).toEqual({
+      1: 1,
+      2: 2,
+      3: 3,
+    });
   });
 
   test('입력한 순서 번호가 겹치면 랜덤 할당한다.', () => {
-    const priorityCollection = {
-      1: [1, 1, 3],
-      2: [2, 2, 4],
-      3: [3, 3, 5],
+    const orderListByTeamCollection = {
+      1: [1, 2, 3],
+      2: [1, 2, 3],
+      3: [3, 4, 5],
     };
-    orderDecider.decideOrder(priorityCollection, 3);
-    expect(orderDecider.orderResult).toEqual(expect.objectContaining({ 3: 3 }));
+
+    expect(orderDecider.getPresentationOrderResult(3, orderListByTeamCollection)).toEqual(
+      expect.objectContaining({ 3: 3 })
+    );
   });
 
   test('순서가 할당되지 않은 팀은 `Not assigned`가 할당된다.', () => {
-    const priorityCollection = {
-      1: [1, 1, 1, 1],
-      2: [2, 2, 2, 2],
-      3: [3, 3, 3, 3],
+    const orderListByTeamCollection = {
+      1: [1, 2, 3],
+      2: [1, 2, 3],
+      3: [1, 2, 3],
+      4: [1, 2, 3],
     };
-    orderDecider.decideOrder(priorityCollection, 4);
-    expect(Object.values(orderDecider.orderResult).includes(NOT_ASSIGNED_TEXT)).toEqual(true);
+
+    expect(
+      Object.values(orderDecider.getPresentationOrderResult(4, orderListByTeamCollection)).includes(
+        NOT_ASSIGNED_TEXT
+      )
+    ).toEqual(true);
   });
 });
