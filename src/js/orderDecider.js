@@ -2,31 +2,49 @@ import { NOT_ASSIGNED_TEXT } from './constant/rule';
 import { pickRandomElementInArray } from './util';
 
 class OrderDecider {
-  constructor() {
-    this.orderResult = {};
-    this.orderListByTeamCollection = {};
-  }
+  getPresentationOrderResult(totalTeamCount, orderListByTeamCollection) {
+    const orderListByPriorityCollection =
+      this.#convertToOrderListByPriorityCollection(orderListByTeamCollection);
 
-  getPresentationOrderResult(totalTeamCount) {
-    const orderListByPriorityCollection = this.#convertToOrderListByPriorityCollection(
-      this.orderListByTeamCollection
-    );
     return this.#decideOrder(orderListByPriorityCollection, totalTeamCount);
   }
 
+  convertToOrderListByTeamCollection(orderInputValueList, totalPriorities) {
+    return orderInputValueList.reduce((acc, cur, index) => {
+      const teamCount = Math.floor(index / totalPriorities) + 1;
+
+      if (!acc[teamCount]) {
+        acc[teamCount] = [];
+      }
+
+      acc[teamCount].push(cur);
+      return acc;
+    }, {});
+  }
+
   #decideOrder(orderListByPriorityCollection, teamCount) {
-    this.orderResult = this.#initOrderResult(teamCount);
+    let orderResult = this.#initOrderResult(teamCount);
     let remainedTeam = Array.from({ length: teamCount }, (_, index) => index + 1);
 
     Object.values(orderListByPriorityCollection).every((orderListByPriority) => {
       if (!remainedTeam.length) return false;
 
-      const candidateTeamByOrder = this.#sortTeamByOrder(orderListByPriority, remainedTeam);
-      remainedTeam = this.#assignOrderToEachTeam(candidateTeamByOrder, remainedTeam);
+      const candidateTeamByOrder = this.#sortTeamByOrder(
+        orderListByPriority,
+        remainedTeam,
+        orderResult
+      );
+      const { newRemainedTeam, newOrderResult } = this.#assignOrderToEachTeam(
+        candidateTeamByOrder,
+        remainedTeam,
+        orderResult
+      );
+      remainedTeam = newRemainedTeam;
+      orderResult = newOrderResult;
       return true;
     });
 
-    return this.orderResult;
+    return orderResult;
   }
 
   #convertToOrderListByPriorityCollection(orderListByTeamCollection) {
@@ -47,13 +65,13 @@ class OrderDecider {
     return orderListByPriorityCollection;
   }
 
-  #sortTeamByOrder(orderListByPriority, remainedTeam) {
+  #sortTeamByOrder(orderListByPriority, remainedTeam, orderResult) {
     const candidateTeamByOrder = {};
 
     orderListByPriority.every((order, index) => {
       const teamNumber = index + 1;
 
-      if (!remainedTeam.includes(teamNumber) || Object.values(this.orderResult).includes(order)) {
+      if (!remainedTeam.includes(teamNumber) || Object.values(orderResult).includes(order)) {
         return true;
       }
 
@@ -68,8 +86,9 @@ class OrderDecider {
     return candidateTeamByOrder;
   }
 
-  #assignOrderToEachTeam(candidateTeamByOrder, remainedTeam) {
+  #assignOrderToEachTeam(candidateTeamByOrder, remainedTeam, orderResult) {
     let newRemainedTeam = remainedTeam;
+    const newOrderResult = orderResult;
 
     Object.entries(candidateTeamByOrder).every(([order, candidateTeams]) => {
       const orderNumber = Number(order);
@@ -79,12 +98,12 @@ class OrderDecider {
         winnerTeam = pickRandomElementInArray(candidateTeams);
       }
 
-      this.orderResult[winnerTeam] = orderNumber;
+      newOrderResult[winnerTeam] = orderNumber;
       newRemainedTeam = newRemainedTeam.filter((team) => team !== winnerTeam);
       return true;
     });
 
-    return newRemainedTeam;
+    return { newRemainedTeam, newOrderResult };
   }
 
   #initOrderResult(teamCount) {

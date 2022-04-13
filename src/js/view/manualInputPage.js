@@ -10,7 +10,6 @@ class ManualInputPage {
     this.errorMessageText = document.querySelector('.error-message-text');
     this.teamOrderListSection = document.querySelector('.team-order-list-section');
     this.teamOrderListForm = null;
-    this.orderRowList = null;
 
     this.preInfoInputContainer.addEventListener('input', this.#onInputPreInfo);
 
@@ -42,7 +41,7 @@ class ManualInputPage {
       this.#renderTeamOrderListSection(prevInfoObject);
 
       this.teamOrderListForm = this.teamOrderListSection.querySelector('.team-order-list-form');
-      this.orderRowList = this.teamOrderListForm.querySelectorAll('.team-row');
+      this.orderInputList = this.teamOrderListForm.querySelectorAll('input');
 
       this.teamOrderListForm.addEventListener('submit', this.#onSubmitTeamOrderList);
     }, 500);
@@ -51,30 +50,23 @@ class ManualInputPage {
   #onSubmitTeamOrderList = (e) => {
     e.preventDefault();
 
-    const isPassed = Array.from(this.orderRowList).every((orderRow, index) => {
-      const teamCount = index + 1;
-      const orderList = Array.from(orderRow.querySelectorAll('input')).map(
-        (orders) => orders.valueAsNumber
-      );
+    const orderInputValueList = Array.from(this.orderInputList).map(
+      (orderInput) => orderInput.valueAsNumber
+    );
 
-      try {
-        validateOrderList(orderList, this.preInfoInputList[1].valueAsNumber);
-      } catch (error) {
-        this.orderDecider.orderListByTeamCollection = {};
-        alert(`[${teamCount}번째 줄]: ${error.message}`);
-        return false;
-      }
-      this.orderDecider.orderListByTeamCollection[teamCount] = orderList;
-      return true;
-    });
+    const orderListByTeamCollection = this.orderDecider.convertToOrderListByTeamCollection(
+      orderInputValueList,
+      this.preInfoInputList[2].valueAsNumber
+    );
 
-    if (isPassed) {
-      const orderResult = this.orderDecider.getPresentationOrderResult(
-        this.preInfoInputList[0].valueAsNumber
-      );
-
-      console.log(orderResult);
+    if (!this.#isCorrectOrderList(orderListByTeamCollection)) {
+      return;
     }
+    const orderResult = this.orderDecider.getPresentationOrderResult(
+      this.preInfoInputList[0].valueAsNumber,
+      orderListByTeamCollection
+    );
+    console.log(orderResult);
   };
 
   #renderTeamOrderListSection(prevInfoObject) {
@@ -90,6 +82,18 @@ class ManualInputPage {
       (preInfoInput) => preInfoInput.valueAsNumber
     );
     return { totalTeamCount, totalOrder, totalPriorities };
+  }
+
+  #isCorrectOrderList(orderListByTeamCollection) {
+    return Object.entries(orderListByTeamCollection).every(([teamCount, orderListByTeam]) => {
+      try {
+        validateOrderList(orderListByTeam, this.preInfoInputList[1].valueAsNumber);
+      } catch (error) {
+        alert(`[${teamCount}팀]: ${error.message}`);
+        return false;
+      }
+      return true;
+    });
   }
 }
 
