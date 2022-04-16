@@ -2,6 +2,10 @@
 
 팀별로 발표 날짜 우선 순위를 입력해서 발표 순서를 정하는 사이트
 
+## 데모 페이지
+
+[발표 순서 정하기](https://nan-noo.github.io/presentation-order-decider/)
+
 ## 기능
 
 - [x] 입력값에 대한 에러 메세지를 입력창 밑에 보여준다.
