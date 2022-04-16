@@ -24,8 +24,9 @@
   --default-error-text-color: #d73535;
 }
 
-@import './app.css';
 @import './buttonStyle.css';
+@import './modal.css';
+@import './app.css';
 
 * {
   margin: 0;
@@ -131,6 +132,8 @@ table {
 }
 
 caption {
+  font-size: larger;
+  font-weight: bold;
   padding: 0 0 20px;
 }
 
