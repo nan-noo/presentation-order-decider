@@ -6,3 +6,5 @@ export const PREV_INFO_RULE = {
 };
 
 export const NOT_ASSIGNED_TEXT = 'Not assigned';
+
+export const INPUT_DEBOUNCE_TIME = 500;

@@ -1,4 +1,11 @@
 import {
+  ORDER_LIST_ERROR_MESSAGE,
+  PREV_INFO_ERROR_MESSAGE,
+  REPLAY_MESSAGE,
+} from '../constant/errorMessage';
+import { INPUT_DEBOUNCE_TIME } from '../constant/rule';
+import { CLASSNAME } from '../constant/selector';
+import {
   generateModalResultTable,
   generateTeamOrderListTemplate,
 } from '../template/manualInputPageTemplate';
@@ -28,7 +35,7 @@ class ManualInputPage {
     }
 
     this.inputDebounce = setTimeout(() => {
-      this.errorMessageText.classList.remove('correct');
+      this.errorMessageText.classList.remove(CLASSNAME.CORRECT);
 
       const prevInfoObject = this.#converToPrevInfoObject(this.preInfoInputList);
       try {
@@ -39,32 +46,32 @@ class ManualInputPage {
         return;
       }
 
-      this.errorMessageText.classList.add('correct');
-      this.errorMessageText.textContent = '올바른 입력값입니다.';
+      this.errorMessageText.classList.add(CLASSNAME.CORRECT);
+      this.errorMessageText.textContent = PREV_INFO_ERROR_MESSAGE.CORRECT_INPUT;
       this.#renderTeamOrderListSection(prevInfoObject);
 
       this.teamOrderListForm = this.teamOrderListSection.querySelector('.team-order-list-form');
       this.orderInputList = this.teamOrderListForm.querySelectorAll('input');
 
       this.teamOrderListForm.addEventListener('submit', this.#onSubmitTeamOrderList);
-    }, 500);
+    }, INPUT_DEBOUNCE_TIME);
   };
 
   #onSubmitTeamOrderList = (e) => {
     e.preventDefault();
     this.#renderResultTable();
-    this.modal.classList.remove('hide');
+    this.modal.classList.remove(CLASSNAME.HIDE);
   };
 
   #onClickModal = ({ target: { classList: targetClassList } }) => {
-    if (targetClassList.contains('replay-button')) {
-      this.#renderResultTable();
-      alert('순서를 다시 할당했습니다 :D');
+    if (targetClassList.contains('dimmer')) {
+      this.modal.classList.add(CLASSNAME.HIDE);
       return;
     }
 
-    if (targetClassList.contains('dimmer')) {
-      this.modal.classList.add('hide');
+    if (targetClassList.contains('replay-button')) {
+      this.#renderResultTable();
+      alert(REPLAY_MESSAGE);
     }
   };
 
@@ -81,16 +88,18 @@ class ManualInputPage {
       (orderInput) => orderInput.valueAsNumber
     );
 
+    const { totalTeamCount, totalPriorities } = this.#converToPrevInfoObject(this.preInfoInputList);
+
     const orderListByTeamCollection = this.orderDecider.convertToOrderListByTeamCollection(
       orderInputValueList,
-      this.preInfoInputList[2].valueAsNumber
+      totalPriorities
     );
 
     if (!this.#isCorrectOrderList(orderListByTeamCollection)) {
       return;
     }
     const orderResult = this.orderDecider.getPresentationOrderResult(
-      this.preInfoInputList[0].valueAsNumber,
+      totalTeamCount,
       orderListByTeamCollection
     );
 
@@ -106,11 +115,12 @@ class ManualInputPage {
   }
 
   #isCorrectOrderList(orderListByTeamCollection) {
+    const { totalOrder } = this.#converToPrevInfoObject(this.preInfoInputList);
     return Object.entries(orderListByTeamCollection).every(([teamCount, orderListByTeam]) => {
       try {
-        validateOrderList(orderListByTeam, this.preInfoInputList[1].valueAsNumber);
+        validateOrderList(orderListByTeam, totalOrder);
       } catch (error) {
-        alert(`[${teamCount}팀]: ${error.message}`);
+        alert(ORDER_LIST_ERROR_MESSAGE.BY_TEAM(teamCount, error.message));
         return false;
       }
       return true;
