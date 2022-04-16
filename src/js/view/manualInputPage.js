@@ -1,4 +1,7 @@
-import { generateTeamOrderListTemplate } from '../template/manualInputPageTemplate';
+import {
+  generateModalResultTable,
+  generateTeamOrderListTemplate,
+} from '../template/manualInputPageTemplate';
 import { validateOrderList, validatePrevInfo } from '../validator';
 
 class ManualInputPage {
@@ -10,6 +13,8 @@ class ManualInputPage {
     this.errorMessageText = document.querySelector('.error-message-text');
     this.teamOrderListSection = document.querySelector('.team-order-list-section');
     this.teamOrderListForm = null;
+    this.modal = document.querySelector('.modal');
+    this.modalResultTable = this.modal.querySelector('table');
 
     this.preInfoInputContainer.addEventListener('input', this.#onInputPreInfo);
 
@@ -66,7 +71,10 @@ class ManualInputPage {
       this.preInfoInputList[0].valueAsNumber,
       orderListByTeamCollection
     );
-    console.log(orderResult);
+
+    this.modal.classList.remove('hide');
+    this.modalResultTable.replaceChildren();
+    this.modalResultTable.insertAdjacentHTML('afterbegin', generateModalResultTable(orderResult));
   };
 
   #renderTeamOrderListSection(prevInfoObject) {

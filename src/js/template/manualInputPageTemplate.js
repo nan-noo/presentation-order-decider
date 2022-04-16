@@ -28,3 +28,23 @@ export const generateTeamOrderListTemplate = ({ totalTeamCount, totalPriorities,
     <button class="input-form-button result-button">결과 확인하기</button>
   </form>
 `;
+
+export const generateModalResultTable = (orderResult) => `
+  <caption>
+    발표 순서 결과
+  </caption>
+  <tr>
+    <th>팀</th>
+    <th>발표 순서</th>
+  </tr>
+  ${Object.entries(orderResult)
+    .map(
+      ([team, order]) => `
+  <tr>
+    <td>팀 ${team}</td>
+    <td>${order}</td>
+  </tr>
+  `
+    )
+    .join(' ')}
+`;
