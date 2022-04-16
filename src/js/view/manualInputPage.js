@@ -60,7 +60,6 @@ class ManualInputPage {
   #onSubmitTeamOrderList = (e) => {
     e.preventDefault();
     this.#renderResultTable();
-    this.modal.classList.remove(CLASSNAME.HIDE);
   };
 
   #onClickModal = ({ target: { classList: targetClassList } }) => {
@@ -103,6 +102,7 @@ class ManualInputPage {
       orderListByTeamCollection
     );
 
+    this.modal.classList.remove(CLASSNAME.HIDE);
     this.modalResultTable.replaceChildren();
     this.modalResultTable.insertAdjacentHTML('afterbegin', generateModalResultTable(orderResult));
   }
