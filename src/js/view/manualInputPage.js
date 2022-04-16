@@ -17,6 +17,7 @@ class ManualInputPage {
     this.modalResultTable = this.modal.querySelector('table');
 
     this.preInfoInputContainer.addEventListener('input', this.#onInputPreInfo);
+    this.modal.addEventListener('click', this.#onClickModal);
 
     this.inputDebounce = null;
   }
@@ -34,15 +35,12 @@ class ManualInputPage {
         validatePrevInfo(prevInfoObject);
       } catch (error) {
         this.errorMessageText.textContent = error.message;
+        this.teamOrderListSection.replaceChildren();
         return;
       }
 
       this.errorMessageText.classList.add('correct');
       this.errorMessageText.textContent = '올바른 입력값입니다.';
-
-      this.preInfoInputList.forEach((preInfoInput) => {
-        preInfoInput.disabled = true;
-      });
       this.#renderTeamOrderListSection(prevInfoObject);
 
       this.teamOrderListForm = this.teamOrderListSection.querySelector('.team-order-list-form');
@@ -54,7 +52,31 @@ class ManualInputPage {
 
   #onSubmitTeamOrderList = (e) => {
     e.preventDefault();
+    this.#renderResultTable();
+    this.modal.classList.remove('hide');
+  };
 
+  #onClickModal = ({ target: { classList: targetClassList } }) => {
+    if (targetClassList.contains('replay-button')) {
+      this.#renderResultTable();
+      alert('순서를 다시 할당했습니다 :D');
+      return;
+    }
+
+    if (targetClassList.contains('dimmer')) {
+      this.modal.classList.add('hide');
+    }
+  };
+
+  #renderTeamOrderListSection(prevInfoObject) {
+    this.teamOrderListSection.replaceChildren();
+    this.teamOrderListSection.insertAdjacentHTML(
+      'afterbegin',
+      generateTeamOrderListTemplate(prevInfoObject)
+    );
+  }
+
+  #renderResultTable() {
     const orderInputValueList = Array.from(this.orderInputList).map(
       (orderInput) => orderInput.valueAsNumber
     );
@@ -72,17 +94,8 @@ class ManualInputPage {
       orderListByTeamCollection
     );
 
-    this.modal.classList.remove('hide');
     this.modalResultTable.replaceChildren();
     this.modalResultTable.insertAdjacentHTML('afterbegin', generateModalResultTable(orderResult));
-  };
-
-  #renderTeamOrderListSection(prevInfoObject) {
-    this.teamOrderListSection.replaceChildren();
-    this.teamOrderListSection.insertAdjacentHTML(
-      'afterbegin',
-      generateTeamOrderListTemplate(prevInfoObject)
-    );
   }
 
   #converToPrevInfoObject(preInfoInputList) {
