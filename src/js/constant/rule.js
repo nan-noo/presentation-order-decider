@@ -8,3 +8,5 @@ export const PREV_INFO_RULE = {
 export const NOT_ASSIGNED_TEXT = 'Not assigned';
 
 export const INPUT_DEBOUNCE_TIME = 500;
+
+export const SNACKBAR_MS_TIME = 2700;

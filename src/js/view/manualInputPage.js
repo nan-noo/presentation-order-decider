@@ -5,6 +5,7 @@ import {
 } from '../constant/errorMessage';
 import { INPUT_DEBOUNCE_TIME } from '../constant/rule';
 import { CLASSNAME } from '../constant/selector';
+import { showSnackbar } from '../util/index';
 import {
   generateModalResultTable,
   generateTeamOrderListTemplate,
@@ -22,6 +23,7 @@ class ManualInputPage {
     this.teamOrderListForm = null;
     this.modal = document.querySelector('.modal');
     this.modalResultTable = this.modal.querySelector('table');
+    this.snackbar = document.querySelector('.snackbar');
 
     this.preInfoInputContainer.addEventListener('input', this.#onInputPreInfo);
     this.modal.addEventListener('click', this.#onClickModal);
@@ -70,7 +72,7 @@ class ManualInputPage {
 
     if (targetClassList.contains('replay-button')) {
       this.#renderResultTable();
-      alert(REPLAY_MESSAGE);
+      showSnackbar(this.snackbar, REPLAY_MESSAGE);
     }
   };
 
@@ -120,7 +122,7 @@ class ManualInputPage {
       try {
         validateOrderList(orderListByTeam, totalOrder);
       } catch (error) {
-        alert(ORDER_LIST_ERROR_MESSAGE.BY_TEAM(teamCount, error.message));
+        showSnackbar(this.snackbar, ORDER_LIST_ERROR_MESSAGE.BY_TEAM(teamCount, error.message));
         return false;
       }
       return true;
