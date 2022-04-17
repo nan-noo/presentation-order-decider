@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>발표 순서 정하기</title>
+  </head>
+  <body>
+    <main id="app">
+      <h1>🔰 발표 순서 정하기 🔰</h1>
+      <nav>
+        <a class="nav-tab-button" href="#excel">excel로 입력</a>
+        <a class="nav-tab-button selected" href="#manual">직접 입력</a>
+      </nav>
+      <section class="pre-info-section">
+        <label>사전 정보(팀, 발표 순서, 우선 순위 개수)를 입력해주세요.</label>
+        <div class="pre-info-input-container">
+          <input class="pre-info-input" type="number" min="2" max="50" placeholder="팀(개)" />
+          <input
+            class="pre-info-input"
+            type="number"
+            min="2"
+            max="100"
+            placeholder="발표 순서(개)"
+          />
+          <input
+            class="pre-info-input"
+            type="number"
+            min="1"
+            max="10"
+            placeholder="우선 순위(개)"
+          />
+        </div>
+        <p class="error-message-text"></p>
+      </section>
+      <section class="team-order-list-section"></section>
+      <section class="result-section modal hide">
+        <div class="dimmer"></div>
+        <div class="modal-container">
+          <table class="result-table"></table>
+          <button type="button" class="default-button replay-button">다시 정하기</button>
+        </div>
+      </section>
+      <div class="snackbar"></div>
+    </main>
+  </body>
+</html>
